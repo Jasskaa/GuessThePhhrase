@@ -192,12 +192,12 @@ export default function App() {
             <Heart className="text-romantic-deep fill-romantic-deep" size={36} />
           </motion.div>
           <h1 className="font-serif text-4xl md:text-6xl text-romantic-deep font-medium mb-3 tracking-tight">
-            Amor en Letras
+            Guess The Phrase
           </h1>
           <div className="flex items-center justify-center gap-3">
             <div className="h-px w-8 bg-romantic-accent/50" />
             <p className="text-romantic-deep/60 text-xs uppercase tracking-[0.3em] font-bold">
-              Guess the Phrase
+              To Play The Trailer
             </p>
             <div className="h-px w-8 bg-romantic-accent/50" />
           </div>
