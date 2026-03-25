@@ -137,8 +137,48 @@ export default function App() {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 40, opacity: 0, scale: 0.8, rotateX: -20 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      rotateX: 0,
+      transition: {
+        type: "spring",
+        stiffness: 120,
+        damping: 14,
+      },
+    },
+  };
+
+  const wordVariants = {
+    hidden: { opacity: 0, scale: 0, rotate: -15 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 py-12 font-sans selection:bg-romantic-accent/30 overflow-x-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 py-12 font-sans selection:bg-romantic-accent/30 overflow-x-hidden bg-[#fff9f9]">
       <AnimatePresence>
         {showSpecialCelebration && <HeartsRain />}
       </AnimatePresence>
@@ -175,51 +215,95 @@ export default function App() {
       </AnimatePresence>
 
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
         className="max-w-4xl w-full bg-white/90 backdrop-blur-md p-6 md:p-12 rounded-[3rem] shadow-2xl shadow-romantic-accent/20 border border-white/50 relative overflow-hidden mb-12"
       >
-        <div className="absolute -top-10 -right-10 opacity-5 pointer-events-none">
+        <motion.div 
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, 8, 0],
+            scale: [1, 1.05, 1]
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+          className="absolute -top-10 -right-10 opacity-5 pointer-events-none"
+        >
           <Heart size={240} className="text-romantic-deep fill-romantic-deep" />
-        </div>
+        </motion.div>
         
         <header className="mb-10 text-center relative">
-          <motion.div
-            animate={{ scale: [1, 1.15, 1] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block mb-4"
-          >
-            <Heart className="text-romantic-deep fill-romantic-deep" size={36} />
+          <motion.div variants={itemVariants}>
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                rotate: [0, 10, -10, 0]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-block mb-4"
+            >
+              <Heart className="text-romantic-deep fill-romantic-deep" size={42} />
+            </motion.div>
           </motion.div>
-          <h1 className="font-serif text-4xl md:text-6xl text-romantic-deep font-medium mb-3 tracking-tight">
+          
+          <motion.h1 
+            variants={itemVariants}
+            className="font-serif text-5xl md:text-7xl text-romantic-deep font-medium mb-4 tracking-tight"
+          >
             Guess The Phrase
-          </h1>
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-px w-8 bg-romantic-accent/50" />
-            <p className="text-romantic-deep/60 text-xs uppercase tracking-[0.3em] font-bold">
+          </motion.h1>
+          
+          <motion.div variants={itemVariants} className="flex items-center justify-center gap-4">
+            <motion.div 
+              animate={{ width: [0, 40, 32] }}
+              className="h-px bg-romantic-accent/50" 
+            />
+            <p className="text-romantic-deep/60 text-sm uppercase tracking-[0.4em] font-bold">
               To Play The Trailer
             </p>
-            <div className="h-px w-8 bg-romantic-accent/50" />
-          </div>
+            <motion.div 
+              animate={{ width: [0, 40, 32] }}
+              className="h-px bg-romantic-accent/50" 
+            />
+          </motion.div>
         </header>
 
-        <div className="flex flex-wrap justify-center gap-x-8 gap-y-10 mb-12">
+        <motion.div 
+          variants={containerVariants}
+          className="flex flex-wrap justify-center gap-x-8 gap-y-10 mb-12"
+        >
           {words.map((word, wIdx) => (
-            <div key={wIdx} className="flex items-center gap-2">
+            <motion.div 
+              key={wIdx} 
+              variants={wordVariants}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="flex items-center gap-2"
+            >
               {!word.isObfuscated ? (
                 <span className="font-serif text-3xl md:text-5xl text-romantic-deep/90 px-1">
                   {word.original}
                 </span>
               ) : (
                 <div className="flex items-center gap-1.5">
-                  <div className="w-10 h-12 md:w-14 md:h-16 flex items-center justify-center rounded-xl border-2 border-romantic-deep bg-romantic-deep text-white shadow-md">
+                  <motion.div 
+                    whileHover={{ rotate: 5 }}
+                    className="w-10 h-12 md:w-14 md:h-16 flex items-center justify-center rounded-xl border-2 border-romantic-deep bg-romantic-deep text-white shadow-md"
+                  >
                     <span className="font-serif text-2xl md:text-4xl font-bold uppercase">
                       {word.original[0]}
                     </span>
-                  </div>
+                  </motion.div>
                   
                   {word.userInputs.map((input, lIdx) => (
-                    <div key={lIdx} className="relative">
+                    <motion.div 
+                      key={lIdx} 
+                      className="relative"
+                      whileHover={{ scale: 1.1 }}
+                    >
                       <input
                         ref={el => {
                           if (!inputRefs.current[wIdx]) inputRefs.current[wIdx] = [];
@@ -242,19 +326,19 @@ export default function App() {
                           }
                         `}
                       />
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <AnimatePresence>
           {gameWon && !showVideo && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
               className="text-center space-y-8"
             >
               <div className="flex items-center justify-center gap-4 text-romantic-deep">
@@ -269,40 +353,48 @@ export default function App() {
                 </motion.div>
               </div>
               
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05, rotate: 2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setShowVideo(true)}
                 className="group relative inline-flex items-center gap-3 px-10 py-4 bg-romantic-deep text-white rounded-2xl hover:bg-romantic-deep/90 transition-all shadow-xl shadow-romantic-deep/30 active:scale-95 overflow-hidden"
               >
                 <span className="relative z-10 font-medium tracking-wide">Ver sorpresa</span>
                 <Heart size={20} className="relative z-10 group-hover:scale-125 transition-transform" />
-              </button>
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
 
         {!gameWon && (
-          <div className="mt-16 flex justify-center">
-            <button 
+          <motion.div variants={itemVariants} className="mt-16 flex justify-center">
+            <motion.button 
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => initPhrase()}
               className="group text-romantic-deep/40 hover:text-romantic-deep transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em]"
             >
               <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
               Reiniciar tablero
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
       </motion.div>
 
       {/* Need Help Section */}
       <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true }}
         className="w-full max-w-4xl text-center px-4"
       >
-        <h2 className="font-serif text-3xl text-romantic-deep/80 mb-8 italic">¿Need Help?</h2>
+        <motion.h2 variants={itemVariants} className="font-serif text-4xl text-romantic-deep/80 mb-10 italic">¿Need Help?</motion.h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div 
+          variants={containerVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {[
             { title: "PinkDle", icon: Grid3X3, color: "bg-pink-100", url: "https://wordle-orcin-tau.vercel.app/" },
             { title: "PinkMori", icon: Brain, color: "bg-rose-100", url: "https://memory-cyan-iota.vercel.app/" },
@@ -310,19 +402,21 @@ export default function App() {
           ].map((item, i) => (
             <motion.a
               key={i}
+              variants={itemVariants}
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-white shadow-lg shadow-romantic-accent/5 flex flex-col items-center gap-4 cursor-pointer group transition-all no-underline"
+              whileHover={{ y: -10, scale: 1.05, rotate: 1 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white/70 backdrop-blur-sm p-8 rounded-[2.5rem] border border-white shadow-xl shadow-romantic-accent/5 flex flex-col items-center gap-5 cursor-pointer group transition-all no-underline"
             >
-              <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center text-romantic-deep group-hover:scale-110 transition-transform`}>
-                <item.icon size={32} />
+              <div className={`w-20 h-20 ${item.color} rounded-3xl flex items-center justify-center text-romantic-deep group-hover:scale-110 group-hover:rotate-6 transition-transform`}>
+                <item.icon size={40} />
               </div>
-              <span className="font-serif text-xl text-romantic-deep font-medium">{item.title}</span>
+              <span className="font-serif text-2xl text-romantic-deep font-medium">{item.title}</span>
             </motion.a>
           ))}
-        </div>
+        </motion.div>
       </motion.section>
     </div>
   );
